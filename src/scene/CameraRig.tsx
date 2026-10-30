@@ -1,0 +1,83 @@
+import { useEffect, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
+import { CameraControls } from '@react-three/drei';
+import type CameraControlsImpl from 'camera-controls';
+import { useStore } from '../state/store';
+import { BOARD, BUTTON_BOX, ELECTRONICS_BOX, TABLE_CENTER } from '../lib/layout';
+import { extractedCenter } from './SelectedModule';
+import { plateCenter } from './TableModules';
+
+export const HOME = { pos: [-0.2, 1.5, 5.3] as const, target: [-0.45, 1.22, 0.1] as const };
+
+export function CameraRig() {
+  const ref = useRef<CameraControlsImpl>(null!);
+  const camera = useStore((s) => s.camera);
+  const selected = useStore((s) => s.selected);
+  const phase = useStore((s) => s.phase);
+  const lastSelected = useRef<number | null>(null);
+
+  const go = (pos: readonly number[], target: readonly number[]) => {
+    const smooth = !useStore.getState().reducedMotion;
+    void ref.current?.setLookAt(pos[0], pos[1], pos[2], target[0], target[1], target[2], smooth);
+  };
+
+  useEffect(() => {
+    const c = ref.current;
+    if (!c) return;
+    const smooth = !useStore.getState().reducedMotion;
+    switch (camera.cmd) {
+      case 'home': go(HOME.pos, HOME.target); break;
+      case 'front': go([0, TABLE_CENTER[1], 4.4], [0, TABLE_CENTER[1], 0.1]); break;
+      case 'back': go([0.3, TABLE_CENTER[1] + 0.2, -3.4], [0, TABLE_CENTER[1], 0]); break;
+      case 'zoomIn': void c.dolly(0.6, smooth); break;
+      case 'zoomOut': void c.dolly(-0.6, smooth); break;
+      case 'board': go([BOARD.x + 0.2, BOARD.y, 1.5], [BOARD.x + 0.25, BOARD.y - 0.05, 0]); break;
+      case 'buttons': go([BUTTON_BOX.x + 0.12, BUTTON_BOX.y + 0.12, 0.6], [BUTTON_BOX.x, BUTTON_BOX.y, 0.03]); break;
+      case 'electronics': go([ELECTRONICS_BOX.x + 0.6, ELECTRONICS_BOX.y + 0.35, 1.1], [ELECTRONICS_BOX.x - 0.15, ELECTRONICS_BOX.y, 0.05]); break;
+      case 'element': {
+        const z = useStore.getState().selected ?? useStore.getState().focused;
+        if (z) {
+          const c2 = extractedCenter(z);
+          go([c2.x + 0.16, c2.y + 0.1, c2.z + 0.5], [c2.x, c2.y, c2.z]);
+        }
+        break;
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [camera]);
+
+  // aproximação ao retirar e afastamento ao devolver
+  useEffect(() => {
+    if (phase === 'extracting' && selected) {
+      lastSelected.current = selected;
+      const c = extractedCenter(selected);
+      go([c.x + 0.16, c.y + 0.1, c.z + 0.52], [c.x, c.y, c.z]);
+    } else if (phase === 'returning' && lastSelected.current) {
+      const p = plateCenter(lastSelected.current);
+      go([p.x * 0.7, p.y + 0.15, 1.9], [p.x * 0.85, p.y, 0.1]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, selected]);
+
+  // afasta a câmera para enquadrar a vista explodida
+  const exploded = useStore((s) => s.exploded);
+  useEffect(() => {
+    if (phase !== 'out' || !selected) return;
+    const c = extractedCenter(selected);
+    if (exploded) go([c.x + 0.35, c.y + 0.3, c.z + 0.95], [c.x, c.y + 0.06, c.z]);
+    else go([c.x + 0.16, c.y + 0.1, c.z + 0.52], [c.x, c.y, c.z]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exploded]);
+
+  useFrame((_, dt) => {
+    const s = useStore.getState();
+    if (s.cameraOrbit && ref.current && s.phase === 'none') void ref.current.rotate(dt * 0.18, 0, false);
+  });
+
+  useEffect(() => {
+    go(HOME.pos, HOME.target);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return <CameraControls ref={ref} makeDefault minDistance={0.12} maxDistance={9} dollySpeed={0.6} smoothTime={0.45} />;
+}
