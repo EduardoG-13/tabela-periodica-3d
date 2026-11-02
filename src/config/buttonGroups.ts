@@ -1,10 +1,13 @@
 /**
  * MAPEAMENTO DOS 4 BOTÕES DE ARCADE  —  configuração editável.
  *
- * Origem: OBSERVADO na fotografia da instalação (imagem 1, todos os grupos acesos),
+ * Cores por família: DOCUMENTADAS na síntese do Prêmio Carolina Bori, conforme a documentação principal do projeto —
+ * vermelho: Hidrogênio; verde: Metais; amarelo: Não Metais; azul: Gases Nobres.
+ *
+ * Elementos de cada botão: OBSERVADOS na fotografia da instalação (imagem 1, todos os grupos acesos),
  * em que cada módulo exibe a cor do seu grupo, e na placa informativa (imagem 5),
  * que lista os grupos Hidrogênio (vermelho), Metais (verde), Ametais (amarelo) e
- * Gases Nobres (azul), na mesma ordem dos botões da caixa lateral.
+ * Gases Nobres (azul), na mesma ordem dos botões da caixa de controle.
  *
  * A documentação escrita do projeto não traz a lista de elementos de cada botão;
  * a lista abaixo foi lida das cores dos LEDs na foto. Repare que a instalação
@@ -39,7 +42,7 @@ export const BUTTON_GROUPS: ButtonGroup[] = [
   { id: 'gases', label: 'Gases Nobres', color: '#1f6fe0', ledColor: [0.12, 0.3, 1.0], members: [2, 10, 18, 36, 54, 86, 118], braille: 'Gases Nobres' },
 ];
 
-export const MAPPING_SOURCE = 'Mapeamento lido das cores da fotografia da instalação (editável em src/config/buttonGroups.ts).';
+export const MAPPING_SOURCE = 'Ordem e famílias dos botões (vermelho Hidrogênio, verde Metais, amarelo Não Metais/Ametais, azul Gases Nobres) conforme a documentação do projeto; os elementos de cada botão foram lidos das cores da fotografia, não de medição elétrica (editável em src/config/buttonGroups.ts).';
 
 const explicit = new Map<number, ButtonGroupId>();
 for (const g of BUTTON_GROUPS) for (const z of g.members ?? []) explicit.set(z, g.id);

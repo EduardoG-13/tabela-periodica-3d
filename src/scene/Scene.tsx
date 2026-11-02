@@ -51,6 +51,7 @@ export function Scene() {
       camera={{ position: [HOME.pos[0], HOME.pos[1], HOME.pos[2]], fov: 42, near: 0.02, far: 40 }}
       gl={{ antialias: true, powerPreference: 'high-performance', toneMapping: THREE.NoToneMapping }}
       onPointerMissed={() => useStore.setState({ hovered: null })}
+      onCreated={(st) => { if (import.meta.env.DEV || window.location.search.includes('debug')) (window as unknown as { __three: unknown }).__three = st; }}
     >
       <color attach="background" args={['#1b1c1e']} />
       <PerformanceMonitor onDecline={() => setDpr(1)} onIncline={() => setDpr(1.75)} />

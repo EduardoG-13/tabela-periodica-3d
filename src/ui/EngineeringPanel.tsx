@@ -70,8 +70,9 @@ export function EngineeringPanel() {
         ))}
       </div>
       <div className="row">
+        <button className="chip" onClick={() => st().openInspect('tecnica')}>Inspecionar caixa técnica</button>
+        <button className="chip" onClick={() => st().openInspect('botoes')}>Inspecionar caixa de controle</button>
         <button className="chip" onClick={() => st().cameraCmd('back')}>Ver parte traseira</button>
-        <button className="chip" onClick={() => st().cameraCmd('electronics')}>Ver caixa dos eletrônicos</button>
       </div>
       <h3>Legenda dos fios</h3>
       <ul className="legend-list">

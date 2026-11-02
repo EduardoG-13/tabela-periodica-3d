@@ -80,8 +80,25 @@ export function neighbor(z: number, dir: 'left' | 'right' | 'up' | 'down'): numb
   return z;
 }
 
-/** Posições dos itens laterais (estimadas pela foto 1) */
-export const BOARD = { x: TABLE_LEFT - 0.225 - 0.42, y: 1.45, w: 0.84, h: 0.73 };
-export const BUTTON_BOX = { x: TABLE_LEFT - 0.115, y: 1.26, w: 0.215, h: 0.055, d: 0.06 };
-export const CREDITS = { x: TABLE_LEFT - 0.075, y: 1.46, w: 0.11, h: 0.21 };
-export const ELECTRONICS_BOX = { x: TABLE_RIGHT + 0.16, y: cellOrigin(18, 6).y + PITCH_Y / 2, w: 0.28, h: 0.17, d: 0.12 };
+/**
+ * Itens à esquerda da tabela — ESTIMADOS a partir da foto de detalhe
+ * (image(20261030-114314).png), com escala tirada da placa de acrílico do Na
+ * (120 mm visíveis ≈ 170 px → ≈ 1,45 px/mm):
+ *  - vão entre a placa informativa e a coluna 1 ≈ 215 mm;
+ *  - plaquinha de créditos ≈ 105 × 190 mm, centralizada sobre a caixa de botões, ≈ 85 mm acima dela;
+ *  - caixa de botões ≈ 248 mm × 71 mm (frente) × 65 mm (profundidade), ocupando todo o vão e
+ *    avançando ≈ 15 mm sobre a placa e sobre a coluna 1; base ≈ 20 mm abaixo da base do período 4.
+ */
+const GAP = 0.215;
+export const BOARD = { x: TABLE_LEFT - GAP - 0.42, y: 1.5, w: 0.84, h: 0.73 };
+const BTN_BOTTOM = cellOrigin(1, 4).y - 0.02;
+export const BUTTON_BOX = { x: TABLE_LEFT - GAP / 2, y: BTN_BOTTOM + 0.0355, w: 0.248, h: 0.071, d: 0.065 };
+export const CREDITS = { x: BUTTON_BOX.x, y: BUTTON_BOX.y + BUTTON_BOX.h / 2 + 0.085 + 0.095, w: 0.105, h: 0.19 };
+
+/**
+ * Caixa técnica (caixa_arduino.svg). O painel de 293,1 × 183,1 mm tem as mesmas proporções do volume
+ * branco que aparece à direita do Rn na foto da instalação (≈ 85 × 55 px com nicho de 57 px ≈ 190 mm
+ * → ≈ 283 × 183 mm). Por isso a caixa é posicionada ali — correspondência ESTIMADA, não documentada.
+ * x/y = centro da face visível; d = profundidade (paredes de 123,2 mm do SVG).
+ */
+export const ELECTRONICS_BOX = { x: TABLE_RIGHT + 0.1466 + 0.005, y: cellOrigin(18, 6).y + PITCH_Y / 2 - 0.01, w: 0.2931, h: 0.1831, d: 0.1232 };

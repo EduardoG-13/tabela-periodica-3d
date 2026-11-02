@@ -7,7 +7,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import type { ThreeEvent } from '@react-three/fiber';
 import * as THREE from 'three';
 import QRCode from 'qrcode';
-import { BOARD, BUTTON_BOX, CREDITS } from '../lib/layout';
+import { BOARD, CREDITS } from '../lib/layout';
 import { brailleDotPositions, toBrailleCells } from '../lib/braille';
 import { SANS, ensureFonts, textCanvasTexture } from '../lib/textures';
 import { getQrLinks, type LinkId, type QrLink } from '../config/links';
@@ -211,7 +211,7 @@ function InfoBoardInner() {
         {[[-1, 1], [1, 1], [-1, -1], [1, -1]].map(([sx, sy], i) => (
           <mesh key={i} position={[sx * (BOARD.w / 2 - 0.035), sy * (BOARD.h / 2 - 0.035), 0.009]} rotation={[Math.PI / 2, 0, 0]}>
             <cylinderGeometry args={[0.011, 0.011, 0.008, 24]} />
-            <meshStandardMaterial color="#e6e6e6" metalness={1} roughness={0.12} />
+            <meshStandardMaterial color="#e6e6e6" metalness={0.6} roughness={0.22} />
           </mesh>
         ))}
         {BUTTON_GROUPS.map((g, i) => (
@@ -299,7 +299,8 @@ function ExtraQrPlate({ links }: { links: QrLink[] }) {
     ctx.fillStyle = '#666';
     ctx.fillText('(placa acrescentada na simulação)', w / 2, 296);
   }, 500, 312, 'extraqr'), [proj, acc]);
-  const x = BUTTON_BOX.x - 0.02, y = BUTTON_BOX.y - 0.15;
+  // fora da área fotografada: à esquerda da placa informativa
+  const x = BOARD.x - BOARD.w / 2 - 0.16, y = BOARD.y - BOARD.h / 2 + H / 2;
   const hit = (url: string | undefined, dx: number) => (
     <mesh position={[x + dx, y + 0.0, 0.0065]} onClick={(e) => { e.stopPropagation(); if (url) window.open(url, '_blank', 'noopener'); }}>
       <planeGeometry args={[0.07, 0.07]} />

@@ -9,6 +9,7 @@ import { BottomControls, ModuleControls } from './ui/Controls';
 import { FlatTable } from './ui/FlatTable';
 import { EngineeringPanel } from './ui/EngineeringPanel';
 import { A11yPanel, SceneDescription } from './ui/A11yPanel';
+import { InspectControls, InspectionPanel } from './ui/InspectionPanel';
 
 const Scene = lazy(() => import('./scene/Scene').then((m) => ({ default: m.Scene })));
 
@@ -66,7 +67,10 @@ function useSceneKeys() {
         st.select(st.focused);
         speakElement(getElement(st.focused));
       }
-    } else if (ev.key === 'Escape') st.returnToNiche();
+    } else if (ev.key === 'Escape') {
+      if (st.inspect !== 'none') st.closeInspect();
+      else st.returnToNiche();
+    }
     else if (ev.key === '+' || ev.key === '=') st.cameraCmd('zoomIn');
     else if (ev.key === '-') st.cameraCmd('zoomOut');
     else if (ev.key.toLowerCase() === 'r') st.cameraCmd('home');
@@ -81,6 +85,8 @@ function useSceneKeys() {
 function RightPanel() {
   const a11y = useStore((s) => s.a11yOpen);
   const mode = useStore((s) => s.mode);
+  const inspect = useStore((s) => s.inspect);
+  if (inspect !== 'none') return <InspectionPanel />;
   if (a11y) return <A11yPanel />;
   if (mode === 'engenharia') return <EngineeringPanel />;
   return <InfoPanel />;
@@ -124,7 +130,7 @@ export default function App() {
               tabIndex={0}
               role="application"
               aria-roledescription="cena 3D interativa"
-              aria-label="Tabela periódica em 3D. Setas: navegar entre elementos. Enter: retirar do nicho. Esc: devolver. 1 a 4: botões dos grupos, 0: todos. R: recentralizar. Mais e menos: zoom. E: explodir peças, I: interior, L: LED."
+              aria-label="Tabela periódica em 3D. Setas: navegar entre elementos. Enter: retirar do nicho. Esc: devolver ou encerrar inspeção. 1 a 4: botões dos grupos, 0: todos. R: recentralizar. Mais e menos: zoom. E: explodir peças, I: interior, L: LED."
               aria-describedby="scene-desc"
               onKeyDown={onKeys}
             >
@@ -132,6 +138,7 @@ export default function App() {
                 <Scene />
               </Suspense>
               <ModuleControls />
+              <InspectControls />
               <BottomControls />
             </div>
           ) : (

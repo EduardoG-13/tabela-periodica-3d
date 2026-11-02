@@ -130,3 +130,13 @@ button { cursor: pointer; }
 }
 
 .e-label { background: rgba(10, 12, 16, 0.85); color: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 3px 7px; font-size: 12px; white-space: nowrap; pointer-events: none; }
+.btn-legend { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; background: rgba(10, 12, 16, 0.85); color: #fff; border-radius: 8px; padding: 4px 8px; font-size: 12px; white-space: nowrap; pointer-events: none; max-width: 420px; }
+.btn-legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.btn-legend small { width: 100%; text-align: center; color: #bbb; }
+.parts button:disabled { opacity: 0.55; cursor: default; }
+.marker { min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; border: 2px solid #fff; background: #1e3a8a; color: #fff; font: 600 12px/18px system-ui, sans-serif; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,.6); }
+.marker.on { background: #2563eb; outline: 2px solid #93c5fd; }
+.marker-text { font-weight: 400; }
+.marker-list { list-style: none; padding: 0; margin: 0 0 8px; }
+.marker-list li { margin-bottom: 3px; }
+.marker-list .marker { margin-right: 6px; }

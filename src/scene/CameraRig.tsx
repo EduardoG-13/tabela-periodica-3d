@@ -32,8 +32,9 @@ export function CameraRig() {
       case 'zoomIn': void c.dolly(0.6, smooth); break;
       case 'zoomOut': void c.dolly(-0.6, smooth); break;
       case 'board': go([BOARD.x + 0.2, BOARD.y, 1.5], [BOARD.x + 0.25, BOARD.y - 0.05, 0]); break;
-      case 'buttons': go([BUTTON_BOX.x + 0.12, BUTTON_BOX.y + 0.12, 0.6], [BUTTON_BOX.x, BUTTON_BOX.y, 0.03]); break;
-      case 'electronics': go([ELECTRONICS_BOX.x + 0.6, ELECTRONICS_BOX.y + 0.35, 1.1], [ELECTRONICS_BOX.x - 0.15, ELECTRONICS_BOX.y, 0.05]); break;
+      case 'buttons': go([BUTTON_BOX.x + 0.1, BUTTON_BOX.y + 0.14, BUTTON_BOX.d + 0.42], [BUTTON_BOX.x, BUTTON_BOX.y, BUTTON_BOX.d / 2]); break;
+      case 'techbox': go([ELECTRONICS_BOX.x - 0.3, ELECTRONICS_BOX.y + 0.28, 0.8], [ELECTRONICS_BOX.x, ELECTRONICS_BOX.y, 0.06]); break;
+      case 'electronics': go([ELECTRONICS_BOX.x - 0.15, ELECTRONICS_BOX.y + 0.35, 1.25], [ELECTRONICS_BOX.x - 0.25, ELECTRONICS_BOX.y, 0.05]); break;
       case 'element': {
         const z = useStore.getState().selected ?? useStore.getState().focused;
         if (z) {
@@ -68,6 +69,20 @@ export function CameraRig() {
     else go([c.x + 0.16, c.y + 0.1, c.z + 0.52], [c.x, c.y, c.z]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exploded]);
+
+  // inspeção das caixas: afasta a câmera na vista explodida e volta ao fechar
+  const inspect = useStore((s) => s.inspect);
+  const inspectExploded = useStore((s) => s.inspectExploded);
+  useEffect(() => {
+    if (inspect === 'botoes') {
+      const k = inspectExploded ? 1 : 0;
+      go([BUTTON_BOX.x + 0.1 + 0.15 * k, BUTTON_BOX.y + 0.14 + 0.12 * k, BUTTON_BOX.d + 0.42 + 0.35 * k], [BUTTON_BOX.x, BUTTON_BOX.y, BUTTON_BOX.d / 2 + 0.04 * k]);
+    } else if (inspect === 'tecnica') {
+      const k = inspectExploded ? 1 : 0;
+      go([ELECTRONICS_BOX.x - 0.3 - 0.2 * k, ELECTRONICS_BOX.y + 0.28 + 0.12 * k, 0.8 + 0.45 * k], [ELECTRONICS_BOX.x, ELECTRONICS_BOX.y, 0.06 + 0.08 * k]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inspectExploded]);
 
   useFrame((_, dt) => {
     const s = useStore.getState();
