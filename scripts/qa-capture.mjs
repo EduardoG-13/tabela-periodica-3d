@@ -109,7 +109,7 @@ await test('cena 3D carrega', async () => {
   console.log(`       ${meshes} malhas em ${Date.now() - t0} ms`);
 });
 
-await shot(page, 'linkedin-capa-01.png', { camera: [[-2.7, 1.6, 2.3], [0.25, 1.22, 0]] });
+await shot(page, 'linkedin-capa-01.png', { camera: [[-3.5, 1.55, 2.45], [-0.4, 1.2, 0]] });
 await shot(page, 'linkedin-geral-02.png', { camera: [[-0.3, 1.33, 4.15], [-0.3, 1.3, 0]] });
 await shot(page, 'linkedin-perspectiva-03.png', { camera: [[2.6, 1.45, 2.7], [0.1, 1.15, 0]] });
 await shot(page, 'linkedin-detalhe-05.png', { camera: [[-1.12, 1.44, 0.62], [-1.3, 1.33, 0.12]] });
@@ -151,7 +151,7 @@ await test('selecionar Ouro: retirar, painel, explodir, voltar', async () => {
   assert(caps.some((c) => c.includes('Ouro')), 'legenda não anunciou o elemento');
   assert(await page.getByText('Ouro').first().isVisible(), 'painel de informação sem o nome');
 });
-const AU_CAM = [[0.45, 1.17, 1.1], [0.29, 1.0, 0.25]]; // Ouro retirado, levemente de cima
+const AU_CAM = [[0.29, 1.1, 1.0], [0.29, 1.0, 0.25]]; // Ouro retirado, centrado diante do próprio nicho
 await shot(page, 'linkedin-elemento-04.png', { camera: AU_CAM });
 await shot(page, 'linkedin-interface-07.png', { camera: AU_CAM, hideUi: false });
 await test('vista explodida', async () => {

@@ -90,9 +90,13 @@ export function neighbor(z: number, dir: 'left' | 'right' | 'up' | 'down'): numb
  *    avançando ≈ 15 mm sobre a placa e sobre a coluna 1; base ≈ 20 mm abaixo da base do período 4.
  */
 const GAP = 0.215;
-export const BOARD = { x: TABLE_LEFT - GAP - 0.42, y: 1.5, w: 0.84, h: 0.73 };
 const BTN_BOTTOM = cellOrigin(1, 4).y - 0.02;
 export const BUTTON_BOX = { x: TABLE_LEFT - GAP / 2, y: BTN_BOTTOM + 0.0355, w: 0.248, h: 0.071, d: 0.065 };
+// A placa fica 5 mm à esquerda da caixa de botões. Com os ≈15 mm de sobreposição estimados,
+// a caixa (65 mm de profundidade) cobria o canto da placa e o QR de Gases Nobres; no objeto real
+// os QR Codes precisam ficar livres. Diferença de ≈21 mm, dentro da margem da estimativa por foto.
+const BOARD_W = 0.84;
+export const BOARD = { x: BUTTON_BOX.x - BUTTON_BOX.w / 2 - 0.005 - BOARD_W / 2, y: 1.5, w: BOARD_W, h: 0.73 };
 export const CREDITS = { x: BUTTON_BOX.x, y: BUTTON_BOX.y + BUTTON_BOX.h / 2 + 0.085 + 0.095, w: 0.105, h: 0.19 };
 
 /**

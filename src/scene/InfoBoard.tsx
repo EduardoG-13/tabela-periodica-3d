@@ -64,13 +64,15 @@ function drawQr(ctx: CanvasRenderingContext2D, link: QrLink | undefined, x: numb
 }
 
 /** Layout (m, a partir do canto superior esquerdo da placa) */
+// Tudo cabe nos 0,73 m de altura da placa. Antes, a fileira de QR dos grupos começava em 0,715 m
+// e terminava em 0,80 m, fora da placa, e os quatro QR Codes saíam cortados.
 const L = {
-  titleY: 0.07,
-  p1Y: 0.135,
-  qrHist: { x: 0.2, y: 0.315, s: 0.11 },
-  p2Y: 0.47,
-  labels: { y: 0.6, h: 0.1 },
-  qrGroup: { y: 0.715, s: 0.085 },
+  titleY: 0.065,
+  p1Y: 0.12,
+  qrHist: { x: 0.2, y: 0.27, s: 0.1 },
+  p2Y: 0.415,
+  labels: { y: 0.525, h: 0.08 },
+  qrGroup: { y: 0.615, s: 0.072 },
 };
 
 interface BrailleLine { text: string; x: number; y: number; maxW: number; center?: boolean }
@@ -153,7 +155,7 @@ function InfoBoardInner() {
       });
     };
     for (const l of brailleLines) place(l.text, l.x, l.y, l.maxW, l.center);
-    BUTTON_GROUPS.forEach((g, i) => place(g.braille, (0.02 + 0.2 * i + 0.1) * BOARD.w / 0.84, L.labels.y + 0.068, 0.18, true));
+    BUTTON_GROUPS.forEach((g, i) => place(g.braille, (0.02 + 0.2 * i + 0.1) * BOARD.w / 0.84, L.labels.y + L.labels.h - 0.024, 0.18, true));
     return out;
   }, [brailleLines]);
 
@@ -170,7 +172,12 @@ function InfoBoardInner() {
       ctx.fillStyle = g.color;
       ctx.fillRect(0, 0, w, h);
       ctx.fillStyle = '#fff';
-      ctx.font = `700 ${h * 0.3}px ${SANS}`;
+      // reduz a fonte quando o nome não cabe com margem (ex.: "Gases Nobres")
+      let fs = h * 0.3;
+      ctx.font = `700 ${fs}px ${SANS}`;
+      const tw = ctx.measureText(g.label).width;
+      if (tw > w * 0.86) fs *= (w * 0.86) / tw;
+      ctx.font = `700 ${fs}px ${SANS}`;
       ctx.textAlign = 'center';
       ctx.shadowColor = 'rgba(0,0,0,0.25)';
       ctx.shadowBlur = 4;
