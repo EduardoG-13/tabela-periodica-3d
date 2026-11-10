@@ -59,7 +59,7 @@ export function InspectionPanel() {
           ))}
         </ul>
         {p && <dl className="facts" aria-live="polite"><dt>Peça</dt><dd>{p.name}</dd><dt>Dimensões</dt><dd>{p.dims} <Tag s={p.source} /></dd><dt>Função</dt><dd>{p.role}</dd></dl>}
-        <h3>Botões (esquerda → direita)</h3>
+        <h3>Botões (da esquerda para a direita)</h3>
         <ul className="legend-list">
           {BUTTON_GROUPS.map((g, i) => <li key={g.id}><span className="dot" style={{ background: g.color }} />{i + 1}. {g.label}</li>)}
         </ul>

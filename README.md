@@ -26,6 +26,17 @@ npm run validate:data  # valida os 118 elementos (contagem, posições, elétron
 
 Requisitos: Node 20+ e um navegador com WebGL 2.
 
+### Teste funcional e capturas (Playwright)
+
+```bash
+npx playwright install chromium   # uma vez
+npm run build
+npm run qa                        # testes + capturas em ./capturas
+npm run qa -- --no-shots          # só os testes
+```
+
+O script `scripts/qa-capture.mjs` serve `dist/`, percorre a jornada principal (carga da cena, teclado, botões dos grupos, retirar/explodir/devolver um módulo, inspeção das caixas, guia de acessibilidade, visão plana, celular 390×844) e falha se algum passo quebrar ou houver erro de página. As capturas usam posições fixas de câmera, então saem iguais a cada execução.
+
 ## O que a aplicação faz
 
 - **Cena 3D**: parede de pastilhas marrons, piso de pedra portuguesa, inscrição metálica “Tabela Periódica”, 118 módulos e 2 marcadores (57–71, 89–103) nas posições da foto. Séries f nas colunas 4–18, como na instalação.

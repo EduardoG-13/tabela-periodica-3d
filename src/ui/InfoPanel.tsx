@@ -2,7 +2,7 @@ import { ELEMENTS, getElement, type ChemicalElement } from '../data/elements';
 import { CATEGORIES, STATES } from '../data/categories';
 import { GROUP_BY_ID, buttonGroupOf } from '../config/buttonGroups';
 import { configPretty, kToC, massLong, num } from '../lib/format';
-import { toBrailleUnicode } from '../lib/braille';
+import { BrailleDots } from './BrailleDots';
 import { isLit, useStore } from '../state/store';
 
 function classification(e: ChemicalElement) {
@@ -56,7 +56,7 @@ export function InfoPanel() {
         <dt>Estado físico</dt><dd>{STATES[e.state]}</dd>
         <dt>Posição na tabela</dt><dd>{position(e)}</dd>
         <dt>Botão / LED</dt><dd><span className="dot" style={{ background: g.color }} /> {g.label} — {lit ? 'aceso' : 'apagado'}</dd>
-        <dt>Braile da plaquinha</dt><dd className="braille" aria-label={`Transcrição braile de ${e.name}`}>{toBrailleUnicode(e.name)}</dd>
+        <dt>Braile da plaquinha</dt><dd className="braille"><BrailleDots text={e.name} label={`Transcrição braile de ${e.name}`} /></dd>
       </dl>
       <section><h3>Descrição</h3><p>{e.description}</p></section>
       <section><h3>História e descoberta</h3><p>{e.discoveryYear} — {e.discoverer}.</p></section>

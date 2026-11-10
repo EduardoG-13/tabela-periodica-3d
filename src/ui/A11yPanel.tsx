@@ -4,7 +4,7 @@ import { accessibilityQrIsLocal, getQrLinks, PROJECT_LINKS } from '../config/lin
 import { ELEMENTS } from '../data/elements';
 import { BUTTON_GROUPS, buttonGroupOf } from '../config/buttonGroups';
 import { BOARD_TEXT } from '../data/boardText';
-import { toBrailleUnicode } from '../lib/braille';
+import { BrailleDots } from './BrailleDots';
 import { useStore } from '../state/store';
 
 function QrCard({ label, url, note }: { label: string; url: string; note: string }) {
@@ -68,7 +68,7 @@ export function A11yPanel() {
       </ul>
 
       <h3>Textos da placa informativa</h3>
-      <p><b>{BOARD_TEXT.title}</b> <span aria-label="em braile">{toBrailleUnicode(BOARD_TEXT.title)}</span></p>
+      <p><b>{BOARD_TEXT.title}</b> <BrailleDots text={BOARD_TEXT.title} size={16} label={`${BOARD_TEXT.title} em braile`} /></p>
       <p>{BOARD_TEXT.p1}</p>
       <p>{BOARD_TEXT.p2}</p>
 

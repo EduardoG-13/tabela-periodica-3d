@@ -5,7 +5,7 @@ import titleFont from '../assets/fonts/tinos-title.typeface.json';
 import { mosaicTextures, stoneTexture } from '../lib/textures';
 import { cellOrigin, PITCH_Y } from '../lib/layout';
 
-const WALL_W = 14;
+const WALL_W = 40; // largo o bastante para não aparecer o vazio ao girar a câmera
 const WALL_H = 2.78;
 
 /** Parede de pastilhas, viga de concreto, teto escuro e calçada de pedra portuguesa */
@@ -18,7 +18,7 @@ export function Room() {
     b.repeat.copy(w.repeat);
     w.needsUpdate = b.needsUpdate = true;
     const f = stoneTexture().clone();
-    f.repeat.set(WALL_W / 1.6, 8 / 1.6);
+    f.repeat.set(WALL_W / 1.6, 12 / 1.6);
     f.needsUpdate = true;
     return { wall: w, bump: b, floor: f };
   }, []);
@@ -33,12 +33,13 @@ export function Room() {
         <boxGeometry args={[WALL_W, 0.34, 0.16]} />
         <meshStandardMaterial color="#d8d6d0" roughness={0.9} />
       </mesh>
-      <mesh position={[0, WALL_H + 0.34, 2]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[WALL_W, 4]} />
-        <meshStandardMaterial color="#26282a" roughness={1} side={THREE.DoubleSide} />
+      <mesh position={[0, WALL_H + 0.34, 5]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[WALL_W, 10]} />
+        {/* leve emissivo: as luzes apontam para a parede e o teto ficaria preto */}
+        <meshStandardMaterial color="#4f5154" emissive="#2e3033" roughness={1} side={THREE.DoubleSide} />
       </mesh>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 4]} receiveShadow>
-        <planeGeometry args={[WALL_W, 8]} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 6]} receiveShadow>
+        <planeGeometry args={[WALL_W, 12]} />
         <meshStandardMaterial map={floor} roughness={0.85} />
       </mesh>
       {/* rodapé discreto na junção parede/piso */}

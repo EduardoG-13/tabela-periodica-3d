@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "typecheck": "tsc -b",
     "validate:data": "tsx scripts/validate-data.ts",
-    "build:single": "vite build -c vite.single.config.ts"
+    "build:single": "vite build -c vite.single.config.ts",
+    "qa": "node scripts/qa-capture.mjs"
   },
   "dependencies": {
     "@fontsource/arimo": "^5.3.0",
@@ -33,6 +34,7 @@
     "@types/three": "^0.186.0",
     "@vitejs/plugin-react": "^6.1.2",
     "opentype.js": "^2.0.0",
+    "playwright": "^1.65.0",
     "tsx": "^4.23.15",
     "typescript": "~5.9",
     "vite": "^8.3.5",
