@@ -72,6 +72,8 @@ interface State {
 
 const prefersReduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
+let captionTimer: ReturnType<typeof setTimeout> | undefined;
+
 export const useStore = create<State>((set, get) => ({
   view: '3d',
   mode: 'explorar',
@@ -145,6 +147,9 @@ export const useStore = create<State>((set, get) => ({
   },
   say: (text) => {
     set({ caption: text });
+    // a legenda some sozinha depois de alguns segundos (proporcional ao tamanho do texto)
+    clearTimeout(captionTimer);
+    captionTimer = setTimeout(() => { if (get().caption === text) set({ caption: '' }); }, Math.min(9000, 2500 + text.length * 60));
     if (get().narration && 'speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);

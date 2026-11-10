@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { CameraControls } from '@react-three/drei';
 import type CameraControlsImpl from 'camera-controls';
 import { useStore } from '../state/store';
@@ -9,7 +9,19 @@ import { plateCenter } from './TableModules';
 
 export const HOME = { pos: [-0.2, 1.5, 5.3] as const, target: [-0.45, 1.22, 0.1] as const };
 
+/** Vista inicial afastada em telas estreitas (celular em pé), para a tabela inteira caber */
+function homeFor(aspect: number) {
+  if (aspect >= 1.2) return HOME;
+  // tela estreita: centraliza na tabela (sem a placa informativa) e afasta o suficiente para a largura caber
+  const f = Math.min(1.75, 1.45 / aspect);
+  const t = [TABLE_CENTER[0], HOME.target[1], HOME.target[2]];
+  const p = [TABLE_CENTER[0] + 0.05, HOME.pos[1], HOME.pos[2]];
+  return { pos: p.map((v, i) => t[i] + (v - t[i]) * f), target: t };
+}
+
 export function CameraRig() {
+  const size = useThree((s) => s.size);
+  const home = () => homeFor(size.width / Math.max(1, size.height));
   const ref = useRef<CameraControlsImpl>(null!);
   const camera = useStore((s) => s.camera);
   const selected = useStore((s) => s.selected);
@@ -26,7 +38,7 @@ export function CameraRig() {
     if (!c) return;
     const smooth = !useStore.getState().reducedMotion;
     switch (camera.cmd) {
-      case 'home': go(HOME.pos, HOME.target); break;
+      case 'home': { const h = home(); go(h.pos, h.target); break; }
       case 'front': go([0, TABLE_CENTER[1], 4.4], [0, TABLE_CENTER[1], 0.1]); break;
       case 'back': go([0.3, TABLE_CENTER[1] + 0.2, -3.4], [0, TABLE_CENTER[1], 0]); break;
       case 'zoomIn': void c.dolly(0.6, smooth); break;
@@ -90,9 +102,10 @@ export function CameraRig() {
   });
 
   useEffect(() => {
-    go(HOME.pos, HOME.target);
+    const h = home();
+    go(h.pos, h.target);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return <CameraControls ref={ref} makeDefault minDistance={0.12} maxDistance={9} dollySpeed={0.6} smoothTime={0.45} />;
+  return <CameraControls ref={ref} makeDefault minDistance={0.12} maxDistance={14} dollySpeed={0.6} smoothTime={0.45} />;
 }

@@ -46,7 +46,7 @@ export function Scene() {
   const high = quality === 'alta';
   return (
     <Canvas
-      shadows={high ? 'soft' : false}
+      shadows={high ? 'percentage' : false}
       dpr={[1, high ? dpr : 1]}
       camera={{ position: [HOME.pos[0], HOME.pos[1], HOME.pos[2]], fov: 42, near: 0.02, far: 40 }}
       gl={{ antialias: true, powerPreference: 'high-performance', toneMapping: THREE.NoToneMapping }}
